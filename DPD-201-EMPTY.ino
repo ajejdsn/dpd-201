@@ -21,22 +21,22 @@ void loop() {
 
 void printA(uint16_t x) {
 
-    lcd.write(255-x<<1);   
+    lcd.write(255-x<<1);   // print ASCII (ex. A=65)
 }
 
-void rein()
+void rein() // clear screen
 {
   lcd.write(231); // CLS
   delay(50);
 } 
 
 inline uint8_t eD(uint8_t x) {
-  return 255 - (x << 1); 
+  return 255 - (x << 1);  // encode
 }
 
 void pR(const char* text) {
   while (*text) {
-    lcd.write(eD((uint8_t)*text)); 
+    lcd.write(eD((uint8_t)*text)); // write text
     text++;
   }
 }
