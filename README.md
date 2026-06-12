@@ -3,9 +3,11 @@ Adapted Version of niq_ro's repo
 
 Sources:
 
-https://nicuflorica.blogspot.com/2021/07/afisaj-vfd-modul-datecs-dpd-201.html
+Info: https://nicuflorica.blogspot.com/2021/07/afisaj-vfd-modul-datecs-dpd-201.html
 
-https://github.com/tehniq3/DPD-201/tree/main
+Inversing code: https://github.com/tehniq3/DPD-201/tree/main
+
+Datasheet: https://www.datecs.bg/en/downloads/pdf?id=DPD201_user.pdf
 
 # ENGLISH VERSION
 
