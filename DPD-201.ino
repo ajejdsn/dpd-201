@@ -5,7 +5,11 @@ SoftwareSerial lcd(255, 2);
 // https://github.com/ajejdsn/dpd-201
 // =D
 
-
+/* 
+*****************************************************
+test code, i know that this one is REALLY bad >.<
+*****************************************************
+*/
 
 
 String text7 = "   DATECS DPD-201   ";
@@ -74,7 +78,11 @@ void printR(String text) {
 
 void printA(int symbol) {
 
-    lcd.write(255-2*symbol);   
+    lcd.write(255-2*symbol);  
+  // similar formulas:
+  // 255-2x or ~(2x)
+  // 255-(x<<1)
+  // ~((x<<1)|(x>>7))
 }
 
 void rein()
