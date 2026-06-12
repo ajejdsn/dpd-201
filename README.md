@@ -39,6 +39,7 @@ You can use these functions for:
 
 ### 1.3: Additional info.
 By the specifications, display works at 10-24V voltage range. For the most correct display work, you can use 12V 1A Power supply, 19V Laptop Charger, or 24V DC PSU.
+Since the display uses the L7805 D-PAK to power the logic, it is strongly recommended to use power supplies from 10 to 12V.
 By specification, display can use US, ESC, CAN, CLR and some other commands, they can be sended by printA() 
 I think, this display uses inverted TTL logic that inverts by the chip on the cash registrator M/B (example: MAX232 in Datecs FP-3530T), so we need to invert it by the software.
 
@@ -76,6 +77,7 @@ If you can improve something or tell about some issues, use the issues tab or co
 
 ### 1.3: Дополнительная информация
 Согласно спецификации, дисплей работает в диапазоне напряжений 10–24В. Для наиболее корректной работы можно использовать блок питания 12В 1А, зарядное устройство ноутбука 19В или источник питания 24В DC.
+Исходя из того, что дисплей использует L7805 D-PAK для питания логики, категорически рекомендуется использовать источники питания от 10 до 12в.
 
 По спецификациям, дисплей также умеет использовать US, ESC, CAN, CLR, и другие комманды, их можно отправлять последовательно по printA.
 
