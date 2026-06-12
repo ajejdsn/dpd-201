@@ -1,6 +1,7 @@
 #include <SoftwareSerial.h>
-#define LTX 2
-#define LRX -1
+#define LTX 2 
+#define LRX -1 
+// we don't need RX ^
 SoftwareSerial lcd(LRX, LTX);
 // EXAMPLE w/o TESTS
 // https://github.com/ajejdsn/dpd-201
@@ -19,9 +20,9 @@ void loop() {
   
 }
 
-void printA(uint16_t x) {
+void printA(byte x) {
 
-    lcd.write(255-x<<1);   // print ASCII (ex. A=65)
+    lcd.write(eD(x));   // print ASCII (ex. A=65)
 }
 
 void rein() // clear screen
@@ -31,12 +32,12 @@ void rein() // clear screen
 } 
 
 inline uint8_t eD(uint8_t x) {
-  return 255 - (x << 1);  // encode
+  return ~((x<<1)|(x>>7));  // encode
 }
 
-void pR(const char* text) {
+void printR(const char* text) {
   while (*text) {
-    lcd.write(eD((uint8_t)*text)); // write text
+    lcd.write(eD((uint8_t)*text)); // write ASCII text
     text++;
   }
 }
