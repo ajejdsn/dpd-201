@@ -1,4 +1,5 @@
 # dpd-201
+## EDUCATIONAL PURPOSES ONLY
 Adapted Version of niq_ro's repo
 
 Sources:
@@ -8,6 +9,8 @@ Info: https://nicuflorica.blogspot.com/2021/07/afisaj-vfd-modul-datecs-dpd-201.h
 Inversing code: https://github.com/tehniq3/DPD-201/tree/main
 
 Datasheet: https://www.datecs.bg/en/downloads/pdf?id=DPD201_user.pdf
+
+Schematics/Firmware: https://zipstore.ru/blog/ugolok-1rezistor-0/#rez8
 
 # ENGLISH VERSION
 
