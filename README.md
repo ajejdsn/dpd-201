@@ -58,7 +58,7 @@ In the ECR motherboard we have a MAX232 or ADM202 IC at the Customer Display por
 
 ..So the display developers used a software inverting in the CPU code. Somehow it works not only with 12V signals, but also device can normally receive 5V, and, I guess, 3.3V TTL.
 
-Also I guess that we can make even the complete UART, because one of the CN1 pins goes to the C1162A Dout pin(U2). However, I don't know what the logic level used in output, so it'll be risky.
+~~Also I guess that we can make even the complete UART, because one of the CN1 pins goes to the C1162A Dout pin(U2). However, I don't know what the logic level used in output, so it'll be risky.~~ nah dout has a separate testpoint, another mistake -_-
 UPD 2:
 Disassembled the original firmware of display, and found something interesting.
 
@@ -231,7 +231,7 @@ UPD1:
 
 ..Поэтому разработчики дисплея использовали программную инверсию в коде процессора. Почему-то это работает не только с сигналами 12 В, но и устройство нормально принимает 5 В и, по-видимому, 3,3 В (TTL).
 
-Также я полагаю, что мы можем реализовать даже полноценный UART, поскольку один из выводов разъема CN1 подключён к выводу Dout микросхемы C1162A (U2). Однако я не знаю, какой логический уровень используется на выходе, поэтому это будет рискованно.
+~~Также я полагаю, что мы можем реализовать даже полноценный UART, поскольку один из выводов разъема CN1 подключён к выводу Dout микросхемы C1162A (U2). Однако я не знаю, какой логический уровень используется на выходе, поэтому это будет рискованно.~~
 
 Переведено с помощью DeepL.com (бесплатная версия)
 
