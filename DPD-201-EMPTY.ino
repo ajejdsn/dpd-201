@@ -17,11 +17,11 @@ void setup()
   Serial.println(F("READY!!!"));
 }
 void loop() {
-  
+  //...nothing (¬ω⌐)
+  // uh.. add ur code here?
 }
 
 void printA(byte x) {
-
     lcd.write(eD(x));   // print ASCII (ex. A=65)
 }
 
@@ -32,7 +32,13 @@ void rein() // clear screen
 } 
 
 inline uint8_t eD(uint8_t x) {
-  return ~((x<<1)|(x>>7));  // encode
+  asm volatile (
+    "LSL %0 \n\t" // ROL
+    "ADC %0,__zero_reg__ \n\t" // x+0 + carry... x.x
+    "COM %0 \n\t" // NOT (~)
+    :"+r" (x) // return
+    );
+    return x;
 }
 
 void printR(const char* text) {
