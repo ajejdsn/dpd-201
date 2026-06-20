@@ -41,14 +41,25 @@ You can use these functions for:
 - cls() for screen cleaning
 
 ### 1.3: Additional info.
-By the specifications, display works at 10-24V voltage range. For the most correct display work, you can use 12V 1A Power supply, 19V Laptop Charger, or 24V DC PSU.
+By the specifications, display works at 10-24V voltage range. For the most correct display work, you can use 12V 1A Power supply.
 Since the display uses the L7805 D-PAK to power the logic, it is strongly recommended to use power supplies from 10 to 12V.
-By specification, display can use US, ESC, CAN, CLR and some other commands, they can be sended by printA() 
-I think, this display uses inverted TTL logic that inverts by the chip on the cash registrator M/B (example: MAX232 in Datecs FP-3530T), so we need to invert it by the software.
+~~By specification, display can use US, ESC, CAN, CLR and some other commands, they can be sended by printA()~~
+~~I think, this display uses inverted TTL logic that inverts by the chip on the cash registrator M/B (example: MAX232 in Datecs FP-3530T), so we need to invert it by the software.~~
 
 If you can improve something or tell about some issues, use the issues tab or contact this email: solidarqrd@gmail.com
 
-UPD:
+UPD1: 
+There are some mistakes in my troughts.
+
+Researched the display and cash register schematics, and find out this thing:
+In the ECR motherboard we have a MAX232 or ADM202 IC at the Customer Display port.
+
+...But in the display schematic we have a transistor cascade instead of IC, it will remove -12V signal, but all the common-emitter circuits has one problem: The signal inverts.
+
+..So the display developers used a software inverting in the CPU code. Somehow it works not only with 12V signals, but also device can normally receive 5V, and, I guess, 3.3V TTL.
+
+Also I guess that we can make even the complete UART, because one of the CN1 pins goes to the C1162A Dout pin(U2). However, I don't know what the logic level used in output, so it'll be risky.
+UPD 2:
 Disassembled the original firmware of display, and found something interesting.
 
 ```
@@ -204,14 +215,72 @@ return x;
 
 
 ### 1.3: Дополнительная информация
-Согласно спецификации, дисплей работает в диапазоне напряжений 10–24В. Для наиболее корректной работы можно использовать блок питания 12В 1А, зарядное устройство ноутбука 19В или источник питания 24В DC.
+Согласно спецификации, дисплей работает в диапазоне напряжений 10–24В. Для наиболее корректной работы можно использовать блок питания 12В 1А.
 Исходя из того, что дисплей использует L7805 D-PAK для питания логики, категорически рекомендуется использовать источники питания от 10 до 12в.
 
-По спецификациям, дисплей также умеет использовать US, ESC, CAN, CLR, и другие комманды, их можно отправлять последовательно по printA.
+~~По спецификациям, дисплей также умеет использовать US, ESC, CAN, CLR, и другие комманды, их можно отправлять последовательно по printA.~~
 
-Предположительно, этот дисплей использует инвертированную TTL-логику, которая инвертируется микросхемой на материнской плате кассового аппарата (например: MAX232 в Datecs FP-3530T), поэтому её необходимо инвертировать программно.
+~~Предположительно, этот дисплей использует инвертированную TTL-логику, которая инвертируется микросхемой на материнской плате кассового аппарата (например: MAX232 в Datecs FP-3530T), поэтому её необходимо инвертировать программно.~~
+UPD1: 
+В моих рассуждениях есть некоторые ошибки.
+
+Изучил схемы дисплея и кассового аппарата и выяснил следующее:
+На материнской плате ECR на разъёме дисплея для клиента установлен микросхема MAX232 или ADM202.
+
+...Но на схеме дисплея вместо микросхемы используется транзисторная цепь, которая устраняет сигнал -12 В, однако у всех схем с общим эмиттером есть одна проблема: сигнал инвертируется.
+
+..Поэтому разработчики дисплея использовали программную инверсию в коде процессора. Почему-то это работает не только с сигналами 12 В, но и устройство нормально принимает 5 В и, по-видимому, 3,3 В (TTL).
+
+Также я полагаю, что мы можем реализовать даже полноценный UART, поскольку один из выводов разъема CN1 подключён к выводу Dout микросхемы C1162A (U2). Однако я не знаю, какой логический уровень используется на выходе, поэтому это будет рискованно.
+
+Переведено с помощью DeepL.com (бесплатная версия)
 
 Если вы хотите предложить доработку, либо сообщить о проблеме, то помимо специальной вкладки на GitHub вы можете сообщить о чём-либо по данной почте: solidarqrd@gmail.com
 
+Обновление 2:
+Разобрал исходный код прошивки дисплея и обнаружил кое-что интересное.
+Итак, дело не только в инвертировании.
+Полагаю, что окончательный код для Arduino будет выглядеть примерно так:
+```
+inline uint8_t eD(uint8_t x) {
+uint8_t a = (x>>1)|(x<<7); // ROL8(x, 1)
+uint8_t b = a ^ 0x42; // XOR
+return b;
+}
+```
+...Но это не работает.
+Я проверил и обнаружил следующее:
+С помощью этого тестового кода я могу отправлять текст напрямую из монитора последовательного порта.
+```
+#include <SoftwareSerial.h>
 
+#define LTX 2
+#define LRX -1
 
+SoftwareSerial lcd(LRX, LTX, true);
+
+void setup()
+{
+    Serial.begin(9600);
+    lcd.begin(9600);
+    lcd.write(12);
+    lcd.print("test");
+    delay(1000);
+    lcd.write(12);
+    Serial.println(F("READY"));
+}
+
+void loop()
+{
+    if (Serial.available())
+    {
+        int value = Serial.read();
+            lcd.write(eD((uint8_t)value));
+    }
+}
+inline uint8_t eD(uint8_t x) {
+return x;
+}
+```
+
+...Но если мы будем использовать аппаратный последовательный порт вместо программного, то, кроме формулы `~((x<<1)|(x>>7)),` других способов уже нет... Ну, вот и всё ._.
