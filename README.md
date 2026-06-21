@@ -181,7 +181,13 @@ return x;
 }
 ```
 ...But if we will use hardware serial instead of software, there are no more methods except `~((x<<1)|(x>>7))` formula... Soo, that's it ._.
+UPD3:
 
+Working at the STM32 version of code. Used IC: STM32F103C8T6
+
+Found this thing:
+
+...Probably, code works, but we need to use a 3.3v-5v level shifter circuit because display works with 5-12v logic levels only, gonna solder it and publish all the schematics once upon a time. 
 
 # РУССКАЯ ВЕРСИЯ
 
@@ -284,3 +290,9 @@ return x;
 ```
 
 ...Но если мы будем использовать аппаратный последовательный порт вместо программного, то, кроме формулы `~((x<<1)|(x>>7)),` других способов уже нет... Ну, вот и всё ._.
+
+UPD3:
+
+Делаю версию для STM32, использовал плату Blue pill(STM32F103C8T6), нашёл вот что:
+
+...Вероятно, код работает, но мне нужно использовать схему преобразователя уровней 3,3–5 В, потому что дисплей работает только с логическими уровнями 5–12 В. Я её спаяю и опубликую потом.
