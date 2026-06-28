@@ -189,6 +189,12 @@ Found this thing:
 
 ...Probably, code works, but we need to use a 3.3v-5v level shifter circuit because display works with 5-12v logic levels only, gonna solder it and publish all the schematics once upon a time. 
 
+UPD4:
+
+Another code update, and... Yeah, it works! Honestly, that was pretty difficult.
+
+But at least, I have a 1st version of STM32 code version. ^^
+
 # РУССКАЯ ВЕРСИЯ
 
 #### **ВНИМАНИЕ: Это может быть опасно. Автор не несёт ответственности за ваши устройства. Удачи**.
@@ -296,3 +302,10 @@ UPD3:
 Делаю версию для STM32, использовал плату Blue pill(STM32F103C8T6), нашёл вот что:
 
 ...Вероятно, код работает, но мне нужно использовать схему преобразователя уровней 3,3–5 В, потому что дисплей работает только с логическими уровнями 5–12 В. Я её спаяю и опубликую потом.
+
+
+UPD4:
+
+Очередное обновление кода, и... Да, всё работает! Честно, было непросто.
+
+Зато теперь у меня есть первая версия кода для STM32. ^^
