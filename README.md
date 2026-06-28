@@ -12,6 +12,10 @@ Datasheet: https://www.datecs.bg/en/downloads/pdf?id=DPD201_user.pdf
 
 Schematics/Firmware: https://zipstore.ru/blog/ugolok-1rezistor-0/#rez8
 
+DISPLAY CONNECT:
+Arduino:D3
+STM32:PA9 for TX, PA10 for RX
+
 # ENGLISH VERSION
 
 #### **ATTENTION: It may be dangerous. The author is not responsible for your devices. Good luck**.
