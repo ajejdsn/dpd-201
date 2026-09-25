@@ -52,7 +52,7 @@ Since the display uses the L7805 D-PAK to power the logic, it is strongly recomm
 
 If you can improve something or tell about some issues, use the issues tab or contact this email: solidarqrd@gmail.com
 
-UPD1: 
+### UPD1: 
 There are some mistakes in my troughts.
 
 Researched the display and cash register schematics, and find out this thing:
@@ -63,7 +63,7 @@ In the ECR motherboard we have a MAX232 or ADM202 IC at the Customer Display por
 ..So the display developers used a software inverting in the CPU code. Somehow it works not only with 12V signals, but also device can normally receive 5V, and, I guess, 3.3V TTL.
 
 ~~Also I guess that we can make even the complete UART, because one of the CN1 pins goes to the C1162A Dout pin(U2). However, I don't know what the logic level used in output, so it'll be risky.~~ nah dout has a separate testpoint, another mistake -_-
-UPD 2:
+### UPD 2:
 Disassembled the original firmware of display, and found something interesting.
 
 ```
@@ -185,7 +185,7 @@ return x;
 }
 ```
 ...But if we will use hardware serial instead of software, there are no more methods except `~((x<<1)|(x>>7))` formula... Soo, that's it ._.
-UPD3:
+### UPD3:
 
 Working at the STM32 version of code. Used IC: STM32F103C8T6
 
@@ -193,11 +193,64 @@ Found this thing:
 
 ...Probably, code works, but we need to use a 3.3v-5v level shifter circuit because display works with 5-12v logic levels only, gonna solder it and publish all the schematics once upon a time. 
 
-UPD4:
+### UPD4:
 
 Another code update, and... Yeah, it works! Honestly, that was pretty difficult.
 
 But at least, I have a 1st version of STM32 code version. ^^
+
+
+## UPD5 2026 SEP 25: <br>
+You can bypass old and slow controller.<br>
+How? Pretty easy. <br>
+You can connect to some testpoints on the board:<br>
+- TP4(CL)
+- TP5(LS)
+- TP2(CLK)
+- TP3(DIN);
+
+  
+  And control high-voltage shift registers by Arduino, without U1<br>
+  
+Based on my calculations, you can send up to 1420 bits in total if you light up every single symbol (40 symbols with 7x5 segments each, plus 20 annunciators).
+
+If that's the case and we assume the panel has 20 GRID lines, we get:
+1420 / 20 = 71 bits per GRID
+
+So with each multiplexing step, you just need to shift in about 71 bits, latch them with LS, and switch over to the next GRID.
+
+Two MSC1162A chips give you 80 outputs, so 71 bits fit easily into a simple two-chip cascade.
+The MSC1162A packs a 40-bit shift register and a 40-bit latch, topping out at a 4 MHz CLK rate.
+
+And here's where the math kicks in.
+
+At the max clock of 4 MHz:
+T<sub>CLK</sub> = 250 ns
+
+For 71 bits:
+T<sub>shift</sub> = 71 * 250 ns = 17.75 μs
+
+So loading data for a single GRID takes a mere 17.75 μs.
+Now for the best part.
+
+The MSC1162A datasheet doesn't just limit CLK to 4 MHz, it also specifies:
+f<sub>DRV(max)</sub> = 15 kHz
+
+Meaning the max switching frequency for the output driver is 15 kHz.
+If we really are dealing with 20 GRID lines, then based on this parameter:
+
+$$f_{frame(max)} = \frac{15\text{ kHz}}{20}$$
+
+That gives us a maximum refresh rate of 750 Hz across 20 GRID lines. Pretty neat, right?
+
+On top of that, at 750 Hz:
+$$T_{GRID} = \frac{1}{15\text{ kHz}} = 66.67\ \mu\text{s}$$
+
+Out of this window, sending 71 bits at 4 MHz takes up 17.75 μs, leaving a solid 48.92 μs for the active display window and other timing logic.
+
+So running it at 4 MHz actually makes total sense. The MSC1162A is built for exactly this — the datasheet explicitly lists a 4 MHz data transfer speed.
+
+
 
 # РУССКАЯ ВЕРСИЯ
 
