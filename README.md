@@ -250,6 +250,42 @@ Out of this window, sending 71 bits at 4 MHz takes up 17.75 μs, leaving a solid
 
 So running it at 4 MHz actually makes total sense. The MSC1162A is built for exactly this — the datasheet explicitly lists a 4 MHz data transfer speed.
 
+... But 750 Hz is far from a walk in the park. That’s pushing the driver right to its limit. <br>
+It matches the driver outputs' absolute maximum frequency specified in the datasheet: f_DRV(max) = 15 kHz. So 750 Hz is <br>literally running the MSC1162A right on the edge of its specs, not leaving any safety margin.<br>
+
+In this setup, each GRID gets:<br>
+T_GRID = 1 / 15 kHz = 66.67 µs<br>
+
+And shifting 71 bits at CLK = 4 MHz takes:<br>
+T_shift = 71 * 250 ns = 17.75 µs<br>
+
+Leaving 48.92 µs. So on the digital side, everything fits comfortably.<br>
+However, the phosphor and analog side require separate, crazy-delicate attention.<br>
+A 10–15 µs persistence/excitation delay isn't a problem for 750 Hz on its own. The full frame period is only 1.333 ms, and<br> a single GRID is active for roughly 66.7 µs. Even if the phosphor keeps glowing for another 15 µs after turning off, that’s ~22.5% of the GRID interval.<br>
+<br>
+Fuck, I got confused. But basically, 750 Hz is still totally doable<br>.
+<br>
+Something else bothers me way more: the MSC1162A datasheet lists pretty huge output transition times.<br>
+Under V_HV = 65V conditions, t_DLH / t_DHL can reach up to 1 ms, and t_TLH / t_THL up to 5 ms.<br>
+This looks super weird compared to the 15 kHz figure, so I wouldn't take these maximum values literally as a requirement to<br> wait 5 ms after every toggle, otherwise the chip's own spec would contradict its claimed f_DRV limit.<br>
+Still, it's a solid reason to check the actual scope traces on this specific panel.<br>
+<br>
+Another key point: you can shift data in parallel with the current GRID's illumination, because the MSC1162A has separate<br> 40-bit shift registers and latches.<br>
+While you're pushing in the next data set, the outputs keep holding the data from the latch.<br>
+Then, LS transfers the new set into the output latch.<br>
+<br>
+So I'd picture the flow like this:<br>
+<br>
+GRID N is lit -> protocol shifts data for GRID N+1 -> turn off GRID N -> trigger LS -> switch to GRID N+1.<br>
+<br>
+That way, those 17.75 µs of data transfer don't eat into the active display time at all.<br>
+<br>
+And here’s my main takeaway:<br>
+<br>
+600 Hz is the safest bet. That's EXACTLY what we should target.<br>
+<br>
+Whew.... What the fuck...<br>
+
 
 
 # РУССКАЯ ВЕРСИЯ
