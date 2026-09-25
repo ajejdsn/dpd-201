@@ -2,6 +2,8 @@
 ## EDUCATIONAL PURPOSES ONLY
 Adapted Version of niq_ro's repo
 
+ima beginner, pls dont judge too harshly, thats my first project (o.-)
+
 Sources:
 
 Info: https://nicuflorica.blogspot.com/2021/07/afisaj-vfd-modul-datecs-dpd-201.html
